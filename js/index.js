@@ -1,7 +1,29 @@
 const mensaje = document.querySelector("#mensaje");
 const formulario = document.querySelector("#formulario");
 
-//Formulario
+// Cargar los datos del LocalStorage
+window.addEventListener("load", () => {
+  const nombre = localStorage.getItem("nombre");
+  const apellido = localStorage.getItem("apellido");
+  const nivel = localStorage.getItem("nivel");
+  const fechaInicio = localStorage.getItem("fechaInicio");
+
+  if (nombre && apellido && nivel && fechaInicio) {
+    const edad = localStorage.getItem("edad");
+    const data = {
+      nombre: nombre,
+      apellido: apellido,
+      edad: edad,
+      nivel: nivel,
+      fechaInicio: fechaInicio,
+    };
+
+    const resultado = inscribirseEnTenis(nombre, apellido, nivel, fechaInicio, edad);
+    mensaje.textContent = resultado;
+  }
+});
+
+// Formulario
 formulario.addEventListener("submit", (event) => {
   event.preventDefault();
   const { value: nombre } = document.querySelector("#nombre");
@@ -34,6 +56,9 @@ formulario.addEventListener("submit", (event) => {
 
   localStorage.setItem("nombre", nombre);
   localStorage.setItem("apellido", apellido);
+  localStorage.setItem("edad", edad);
+  localStorage.setItem("nivel", nivel);
+  localStorage.setItem("fechaInicio", fechaInicio);
 
   const resultado = inscribirseEnTenis(nombre, apellido, nivel, fechaInicio, edad);
   mensaje.textContent = resultado;
@@ -84,7 +109,7 @@ function inscribirseEnTenis(nombre, apellido, nivel, fechaInicio, edad) {
     }
 
     const precioTotal = calcularPrecioTotal(diasReserva, nivel);
-    mensaje = `¡Felicidades ${nombre} ${apellido}! Te has inscripto en las clases de tenis. El precio total de tu reserva por ${diasReserva} día(s) es de ${precioTotal} dólares.`;
+    mensaje = `¡Felicidades ${nombre} ${apellido}! Te has inscripto en las clases de tenis. El precio total de tu reserva por ${diasReserva} día(s) es de ${precioTotal} dólares. Por semana`;
   }
   return mensaje;
 }
