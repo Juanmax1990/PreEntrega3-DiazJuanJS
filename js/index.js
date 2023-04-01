@@ -65,7 +65,7 @@ formulario.addEventListener("submit", (event) => {
 });
 
 //Precio segun los dias
-function calcularPrecioTotal(diasReserva, nivel) {
+function calcularPrecioTotal(diasReserva, nivel, edad) {
   const precios = {
     1: 100,
     2: 175,
@@ -74,20 +74,38 @@ function calcularPrecioTotal(diasReserva, nivel) {
     5: 490,
   };
 
-  //Precio Escuelita
   if (nivel === "escuelita") {
     if (edad < 5 || edad > 11) {
       mensaje = "Lo sentimos, la Escuelita de Tenis es para niños entre 5 y 11 años.";
       return mensaje;
     }
-    diasReserva = 2;
   } else {
-    const diasInput = document.querySelector("#diasReserva").value;
-    diasReserva = parseInt(diasInput);
+    if (isNaN(diasReserva)) {
+      mensaje = "Ingrese un número válido de días de reserva.";
+      return mensaje;
+    }
+    diasReserva = parseInt(diasReserva);
   }
 
   const precioTotal = precios[diasReserva];
   return precioTotal;
+}
+
+function inscribirseEnTenis(nombre, apellido, nivel, fechaInicio, edad) {
+  let mensaje = "";
+
+  const hoy = new Date();
+
+  if (nivel === "escuelita" && (edad < 5 || edad > 11)) {
+    mensaje = "Lo sentimos, la Escuelita de Tenis es para niños entre 5 y 11 años.";
+  } else {
+    const diasReserva = (nivel === "escuelita") ? 2 : document.querySelector("#diasReserva").value;
+    const precioTotal = calcularPrecioTotal(diasReserva, nivel, edad);
+    
+    mensaje = `¡Felicidades ${nombre} ${apellido}! Te has inscripto en las clases de tenis. El precio total de tu reserva por ${diasReserva} día(s) es de ${precioTotal} dólares.`;
+  }
+
+  return mensaje;
 }
 
 //Inscripcion
@@ -109,7 +127,7 @@ function inscribirseEnTenis(nombre, apellido, nivel, fechaInicio, edad) {
     }
 
     const precioTotal = calcularPrecioTotal(diasReserva, nivel);
-    mensaje = `¡Felicidades ${nombre} ${apellido}! Te has inscripto en las clases de tenis. El precio total de tu reserva por ${diasReserva} día(s) es de ${precioTotal} dólares. Por semana`;
+    mensaje = `¡Felicidades ${nombre} ${apellido}! Te has inscripto en las clases de tenis. El precio total de tu reserva por ${diasReserva} día(s) es de ${precioTotal} dólares.`;
   }
   return mensaje;
 }
