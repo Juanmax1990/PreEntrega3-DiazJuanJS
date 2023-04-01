@@ -73,16 +73,17 @@ function calcularPrecioTotal(diasReserva, nivel, edad) {
     4: 380,
     5: 490,
   };
+  let errorMensaje = "";
 
   if (nivel === "escuelita") {
     if (edad < 5 || edad > 11) {
-      mensaje = "Lo sentimos, la Escuelita de Tenis es para niños entre 5 y 11 años.";
-      return mensaje;
+      errorMensaje = "Lo sentimos, la Escuelita de Tenis es para niños entre 5 y 11 años.";
+      return errorMensaje;
     }
   } else {
     if (isNaN(diasReserva)) {
-      mensaje = "Ingrese un número válido de días de reserva.";
-      return mensaje;
+      errorMensaje = "Ingrese un número válido de días de reserva.";
+      return errorMensaje;
     }
     diasReserva = parseInt(diasReserva);
   }
@@ -96,12 +97,12 @@ function inscribirseEnTenis(nombre, apellido, nivel, fechaInicio, edad) {
 
   const hoy = new Date();
 
-  if (nivel === "escuelita" && (edad < 5 || edad > 11)) {
-    mensaje = "Lo sentimos, la Escuelita de Tenis es para niños entre 5 y 11 años.";
+  const diasReserva = (nivel === "escuelita") ? 2 : document.querySelector("#diasReserva").value;
+  const precioTotal = calcularPrecioTotal(diasReserva, nivel, edad);
+
+  if (typeof precioTotal === "string") {
+    mensaje = precioTotal;
   } else {
-    const diasReserva = (nivel === "escuelita") ? 2 : document.querySelector("#diasReserva").value;
-    const precioTotal = calcularPrecioTotal(diasReserva, nivel, edad);
-    
     mensaje = `¡Felicidades ${nombre} ${apellido}! Te has inscripto en las clases de tenis. El precio total de tu reserva por ${diasReserva} día(s) es de ${precioTotal} dólares.`;
   }
 
