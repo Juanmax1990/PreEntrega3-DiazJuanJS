@@ -35,7 +35,7 @@ formulario.addEventListener("submit", (event) => {
   localStorage.setItem("nombre", nombre);
   localStorage.setItem("apellido", apellido);
 
-  const resultado = inscribirseEnTenis(nombre, apellido, nivel, fechaInicio);
+  const resultado = inscribirseEnTenis(nombre, apellido, nivel, fechaInicio, edad);
   mensaje.textContent = resultado;
 });
 
@@ -49,18 +49,24 @@ function calcularPrecioTotal(diasReserva, nivel) {
     5: 490,
   };
 
-//Precio Escuelita
+  //Precio Escuelita
   if (nivel === "escuelita") {
-    return 390;
+    if (edad < 5 || edad > 11) {
+      mensaje = "Lo sentimos, la Escuelita de Tenis es para niños entre 5 y 11 años.";
+      return mensaje;
+    }
+    diasReserva = 2;
+  } else {
+    const diasInput = document.querySelector("#diasReserva").value;
+    diasReserva = parseInt(diasInput);
   }
 
-  const precioPorDia = precios[diasReserva];
-
-  return precioPorDia;
+  const precioTotal = precios[diasReserva];
+  return precioTotal;
 }
 
 //Inscripcion
-function inscribirseEnTenis(nombre, apellido, nivel, fechaInicio) {
+function inscribirseEnTenis(nombre, apellido, nivel, fechaInicio, edad) {
   let mensaje = "";
 
   const hoy = new Date();
@@ -71,18 +77,14 @@ function inscribirseEnTenis(nombre, apellido, nivel, fechaInicio) {
     let diasReserva = 1;
 
     if (nivel === "escuelita") {
-      const fechaInicioObj = new Date(fechaInicio);
-      const diasReservaArr = [1, 3, 5].filter(
-        (day) => fechaInicioObj.getDay() <= day
-      );
-      diasReserva = diasReservaArr.length;
+      diasReserva = 2;
     } else {
       const diasInput = document.querySelector("#diasReserva").value;
       diasReserva = parseInt(diasInput);
     }
 
     const precioTotal = calcularPrecioTotal(diasReserva, nivel);
-    mensaje = `¡Felicidades ${nombre} ${apellido}! Te has inscripto en las clases de tenis. El precio total de tu reserva por ${diasReserva} día(s) es de ${precioTotal} dólares. Precio semanal`;
+    mensaje = `¡Felicidades ${nombre} ${apellido}! Te has inscripto en las clases de tenis. El precio total de tu reserva por ${diasReserva} día(s) es de ${precioTotal} dólares.`;
   }
   return mensaje;
 }
